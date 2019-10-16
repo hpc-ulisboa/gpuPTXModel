@@ -226,7 +226,6 @@ def plotValues(name, lists, clocks, benchmarks, normalized_t, normalized_p, norm
     list_data_time = lists['time']
     list_data_pow = lists['pow']
     list_data_energy = lists['energy']
-    list_bestF = lists['bestF']
 
     fig_t = plt.figure(1)
     axes_t = fig_t.subplots(clocks['num_mem_clocks'], 1, sharex=True)
@@ -235,11 +234,6 @@ def plotValues(name, lists, clocks, benchmarks, normalized_t, normalized_p, norm
     fig_e = plt.figure(3)
     axes_e = fig_e.subplots(clocks['num_mem_clocks'], 1, sharex=True)
     count_bad = 0
-
-    best_mem_fs = np.asarray([x[0] for x in list_bestF])
-    best_core_fs = np.asarray([x[1] for x in list_bestF])
-
-    hist_best_f = np.zeros((clocks['num_mem_clocks'], np.max(clocks['num_core_clocks'])), dtype=np.int32)
 
     #plot the time, power and energy lines
     for bench_id, bench in enumerate(benchmarks):
@@ -278,15 +272,12 @@ def plotValues(name, lists, clocks, benchmarks, normalized_t, normalized_p, norm
                 else:
                     axis_e.plot(core_clocks[clock_mem_id], list_data_energy[bench_id][clock_mem_id,:], linestyle='--', label=bench)
 
-        if (type == 0) or (type == 1 and good_bench == True) or (type == 2 and good_bench == False):
-            hist_best_f[best_mem_fs[bench_id], best_core_fs[bench_id]] += 1
 
     for clock_mem_id, clock_mem in enumerate(mem_clocks):
         if clocks['num_mem_clocks'] > 1:
             ax2_aux = axes_e[clock_mem_id].twinx()
         else:
             ax2_aux = axes_e.twinx()
-        ax2_aux.bar(core_clocks[clock_mem_id], hist_best_f[clock_mem_id,:] , width=2)
 
     if type == 2:
         name = 'bad_' + name

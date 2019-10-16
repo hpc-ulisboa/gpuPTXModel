@@ -3,6 +3,7 @@
 ## 1. gpuPTXModel Tool
 
 ``gpuPTXModel`` is a command line tool that allows creating a GPU power consumption model, which can be used to predict the power consumption of applications based solely on the sequence of [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html) instructions in the kernel code.
+The tool receives as argument the path to the microbenchmark (and optionally the testing dataset), which need to have been properly aggregated using the ``toolReadBenchs`` tool.
 
 * Usage:
 ```
@@ -101,7 +102,7 @@ toolReadBenchs.py <PATH_TO_MICROBENCHMARK_DATASET> <GPU_NAME> [--benchs_file <MI
     ``--o`` : create output file with the aggregated datasets (default: False).
 
     ``--v`` : turn on verbose mode (default: False).
-    
+
 * Example:
 ```
 toolReadBenchs.py Outputs/Microbenchmarks/GTXTitanX/ gtxtitanx --benchs_file benchs_all.txt --test_data_path Outputs/RealBenchmarks/GTXTitanX/ --benchs_test_file benchs_real_best.txt --o

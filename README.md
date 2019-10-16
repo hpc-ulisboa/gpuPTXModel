@@ -1,5 +1,7 @@
 # gpuPTXModel - GPU Power Model through Assembly Analysis using Deep Structured Learning
 
+## 1. gpuPTXModel Tool
+
 ``gpuPTXModel`` is a command line tool that allows creating a GPU power consumption model, which can be used to predict the power consumption of applications based solely on the sequence of [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html) instructions in the kernel code.
 
 * Usage:
@@ -7,31 +9,45 @@
 gpuPTXModel.py <PATH_TO_MICROBENCHMARK_DATASET> <GPU_NAME> [--test_data_path <PATH_TO_TESTING_DATASET>] [--device <cpu|gpu>] [--device_id <ID>] [--encoder_file <FILE>]  [--time_dvfs_file <FILE>] [--pow_dvfs_file <FILE>] [--energy_dvfs_file <FILE>] [--no_time_dvfs] [--no_pow_dvfs] [--no_energy_dvfs] [--num_epochs <NUM_EPOCHS>] [--v]
 ```
 
-* Options:
-```
-  <PATH_TO_MICROBENCHMARK_DATASET>: PATH to the directory with the microbenchmark profilling data (to be used in training).
-  <GPU_NAME>: name of the GPU device the dataset was executed on.
+* Arguments:
 
-  --test_data_path <PATH_TO_TESTING_DATASET>: PATH to the directory with the testing dataset (to be later used for testing the models) (default: '').
-  --device <cpu|gpu>: select the device where the training will execute (default: gpu)
-  --device_id <id>: target a specific device (default: 0)
-  --encoder_file <FILE>: name of the file with the encoder configuration (default: '')
-  --time_dvfs_file <FILE>: name of the file with the Time FNN configuration (default: '')
-  --pow_dvfs_file <FILE>: name of the file with the Power FNN configuration (default: '')
-  --energy_dvfs_file <FILE>: name of the file with the Energy FNN configuration (default: '')
-  --no_time_dvfs: to turn off Time FNN, i.e., not use it
-  --no_pow_dvfs: to turn off Power FNN, i.e., not use it
-  --no_energy_dvfs: to turn off Energy FNN, i.e., not use it
-  --num_epochs <NUM_EPOCHS>: to select the maximum number of epochs to use during training (default: 20)
-  --v: turn on verbose mode (default: False)
-```
+    ``<PATH_TO_MICROBENCHMARK_DATASET>`` : PATH to the directory with the microbenchmark profilling data (to be used in training).
+
+    ``<GPU_NAME>`` : name of the GPU device the dataset was executed on.
+* Options:
+
+    ``--test_data_path <PATH_TO_TESTING_DATASET>`` : PATH to the directory with the testing dataset (to be later used for testing the models) (default: '').    
+
+    ``--device <cpu|gpu>`` : select the device where the training will execute (default: gpu).
+
+    ``--device_id <id>`` : target a specific device (default: 0).
+
+    ``--encoder_file <FILE>`` : name of the file with the encoder configuration (default: '').
+
+    ``--time_dvfs_file <FILE>`` : name of the file with the Time FNN configuration (default: '').
+
+    ``--pow_dvfs_file <FILE>`` : name of the file with the Power FNN configuration (default: '').
+
+    ``--energy_dvfs_file <FILE>`` : name of the file with the Energy FNN configuration (default: '').
+
+    ``--no_time_dvfs`` : to turn off Time FNN, i.e., not use it.
+
+    ``--no_pow_dvfs`` : to turn off Power FNN, i.e., not use it.
+
+    ``--no_energy_dvfs`` : to turn off Energy FNN, i.e., not use it.
+
+    ``--num_epochs <NUM_EPOCHS>`` : to select the maximum number of epochs to use during training (default: 20).
+
+    ``--v`` : turn on verbose mode (default: False).
+
+
 
 * Example:
 ```
   gpuPTXModel.py Microbenchmarks/Outputs/ --device gpu --model_name LSTM --num_layers 2 --learning_rate 0.001 --num_epochs 50
 ```
 
-## gpuPTXParser
+## 2. gpuPTXParser Tool
 
 ``gpuPTXParser`` is a command line tool that can be used for reading [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html) files and extracting the number of occurrences of each different instructions per GPU kernel. The tool can also extract the sequence of instructions of the kernels in the source file.
 
@@ -40,21 +56,24 @@ gpuPTXModel.py <PATH_TO_MICROBENCHMARK_DATASET> <GPU_NAME> [--test_data_path <PA
 gpuPTXParser.py <PATH_TO_ISA_FILES> <APPLICATION.ptx> [--histogram] [--v]
 ```
 
-* Options:
-```
-  <PATH_TO_ISA_FILES>:  PATH to the directory with the isa files (ptx_isa.txt, ptx_state_spaces.txt, ptx_instruction_types.txt)
-  <APPLICATION.ptx>:  .ptx file to be parsed
+* Arguments:
 
-  --histogram: output a pdf file with the histogram of instructions used per kernel (default: False)
-  --v: turn on verbose mode (default: False)
-```
+    ``<PATH_TO_ISA_FILES>``:  PATH to the directory with the isa files (ptx_isa.txt, ptx_state_spaces.txt, ptx_instruction_types.txt).
+
+    ``<APPLICATION.ptx>`` :  .ptx file to be parsed.
+
+* Options:
+
+    ``--histogram`` : output a pdf file with the histogram of instructions used per kernel (default: False).
+
+    ``--v`` : turn on verbose mode (default: False).
 
 * Example:
 ```
 gpuPTXParser.py aux_files/ Microbenchmarks/pure_DRAM/DRAM.ptx --histogram
 ```
 
-## toolReadBenchs
+## 3. toolReadBenchs Tool
 
 ``toolReadBenchs`` is a command line tool that can be used for reading the measured values (execution times and power consumption) and organizing them in the format that can be used by the main ``gpuPTXModel`` tool.
 
@@ -63,26 +82,33 @@ gpuPTXParser.py aux_files/ Microbenchmarks/pure_DRAM/DRAM.ptx --histogram
 toolReadBenchs.py <PATH_TO_MICROBENCHMARK_DATASET> <GPU_NAME> [--benchs_file <MICROBENCHMARK_NAMES>] [--test_data_path <PATH_TO_TESTING_DATASET>] [--benchs_test_file <TESTING_NAMES>] [--tdp <TDP_VALUE>] [--o] [--v]
 ```
 
+* Arguments:
+
+    ``<PATH_TO_MICROBENCHMARK_DATASET>`` : PATH to the directory with the microbenchmark dataset (to be later used for training/validation the models).
+
+    ``<GPU_NAME>`` : name of the GPU device the dataset was executed on.
+
 * Options:
-```
-  <PATH_TO_MICROBENCHMARK_DATASET>: PATH to the directory with the microbenchmark dataset (to be later used for training/validation the models).
-  <GPU_NAME>: name of the GPU device the dataset was executed on.
 
-  --benchs_file <MICROBENCHMARK_NAMES>: provide file with names of the microbenchmarks (default: all)
-  --test_data_path <PATH_TO_TESTING_DATASET>: PATH to the directory with the testing dataset (to be later used for testing the models) (default: '').
-  --benchs_test_file <TESTING_NAMES: provide file with names of the testing benchmarks (default: all).
-  --tdp <TDP_VALUE>: give TDP value of the GPU device (default: 250).
-  --o: create output file with the aggregated datasets (default: False)
-  --v: turn on verbose mode (default: False)
-```
+    ``--benchs_file <MICROBENCHMARK_NAMES>`` : provide file with names of the microbenchmarks (default: all).
 
+    ``--test_data_path <PATH_TO_TESTING_DATASET>`` : PATH to the directory with the testing dataset (to be later used for testing the models) (default: '').
+
+    ``--benchs_test_file <TESTING_NAMES>`` : provide file with names of the testing benchmarks (default: all).
+
+    ``--tdp <TDP_VALUE>`` : give TDP value of the GPU device (default: 250).
+
+    ``--o`` : create output file with the aggregated datasets (default: False).
+
+    ``--v`` : turn on verbose mode (default: False).
+    
 * Example:
 ```
 toolReadBenchs.py Outputs/Microbenchmarks/GTXTitanX/ gtxtitanx --benchs_file benchs_all.txt --test_data_path Outputs/RealBenchmarks/GTXTitanX/ --benchs_test_file benchs_real_best.txt --o
 ```
 
 ## Contact
-If you have any questions regarding gpuPTXModel please email joao.guerreiro@inesc-id.pt
+If you have problems, questions, ideas or suggestions, please contact us by e-mail at joao.guerreiro@inesc-id.pt.
 
 ## Author
 João Guerreiro/ [@joaofilipedg](https://github.com/joaofilipedg)

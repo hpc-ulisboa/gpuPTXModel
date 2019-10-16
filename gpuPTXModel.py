@@ -9,7 +9,6 @@ def main():
     from os import listdir
     from src import readFiles as rf
     from src import functionsPyTorch as pytor
-    from src import outputPlots as outp
     from src import globalStuff as gls
     from src.globalStuff import printing, output_dir_train, isa_file, inst_types_file, state_spaces_file, initPytorch, arrangeDataset, possible_outputs, closeOutputLogFile
 
@@ -29,23 +28,8 @@ def main():
     parser.add_argument('--device_id', type=int, default=0)
     parser.add_argument('--test_number', type=int, default=-1)
     parser.add_argument('--num_epochs', type=int, default=20)
-    parser.add_argument('--batch_size', type=int, default=1)
-    parser.add_argument('--embed_size', type=int, default=5)
-    parser.add_argument('--hidden_size', type=int, default=100)
-    parser.add_argument('--hidden_size_2', type=int, default=70)
-    parser.add_argument('--hidden_size_encoder', type=int, default=50)
-    parser.add_argument('--num_layers', type=int, default=1)
-    parser.add_argument('--num_layers_encoder', type=int, default=1)
-    parser.add_argument('--optimizer', type=str, default='SGD')
-    parser.add_argument('--optimizer_encoder', type=str, default='SGD')
-    parser.add_argument('--learning_rate', type=float, default=0.001)
-    parser.add_argument('--learning_rate_encoder', type=float, default=0.001)
-    parser.add_argument('--dropout_prob', type=float, default=0)
-    parser.add_argument('--dropout_prob_encoder', type=float, default=0)
-    parser.add_argument('--model_name', type=str, default='LSTM')
     parser.add_argument('--fast', action='store_const', const=True, default=False)
     parser.add_argument('--v', action='store_const', const=True, default=False)
-    parser.add_argument('--f', action='store_const', const=True, default=False)
     parser.add_argument('--no_pow_dvfs', action='store_const', const=True, default=False)
     parser.add_argument('--no_time_dvfs', action='store_const', const=True, default=False)
     parser.add_argument('--no_energy_dvfs', action='store_const', const=True, default=False)
@@ -56,7 +40,6 @@ def main():
     parser.add_argument('--time_dvfs_file', type=str, default='')
     parser.add_argument('--pow_dvfs_file', type=str, default='')
     parser.add_argument('--energy_dvfs_file', type=str, default='')
-    parser.add_argument('--pretrained', action='store_const', const=True, default=False)
 
     args = vars(parser.parse_args())
     print(args)
@@ -70,23 +53,8 @@ def main():
     device_arg = args['device']
     device_id = args['device_id']
     num_epochs = args['num_epochs']
-    batch_size = args['batch_size']
-    optimizer = args['optimizer']
-    optimizer_encoder = args['optimizer_encoder']
-    learning_rate = args['learning_rate']
-    learning_rate_encoder = args['learning_rate_encoder']
-    dropout_prob = args['dropout_prob']
-    dropout_prob_encoder = args['dropout_prob_encoder']
-    hidden_size = args['hidden_size']
-    hidden_size_2 = args['hidden_size_2']
-    hidden_size_encoder = args['hidden_size_encoder']
-    num_layers = args['num_layers']
-    num_layers_encoder = args['num_layers_encoder']
-    embed_size = args['embed_size']
-    model_name = args['model_name']
     fast = args['fast']
     verbose = args['v']
-    super_fast = args['f']
     never_stop = args['never_stop']
     no_output = args['no_output']
     test_number = args['test_number']
@@ -95,7 +63,6 @@ def main():
     timedvfs_config_file = args['time_dvfs_file']
     powdvfs_config_file = args['pow_dvfs_file']
     energydvfs_config_file = args['energy_dvfs_file']
-    use_pretrained_models = args['pretrained']
 
     outputs_to_model = {'time_dvfs': args['no_time_dvfs'], 'pow_dvfs': args['no_pow_dvfs'], 'energy_dvfs': args['no_energy_dvfs']}
 
@@ -113,7 +80,7 @@ def main():
     printing(device, no_output)
     np.random.seed(40)
 
-    printing('Model type: %s' %model_name, no_output)
+    # printing('Model type: %s' %model_name, no_output)
     printing('Data from GPU: %s' %gpu_name, no_output)
 
     dataset_ubench, clocks = rf.readDataSet(benchs_data_path, gpu_name, tdp, performance_counters)
@@ -146,89 +113,80 @@ def main():
     index_val = random_ordering[index_limit_training:]
     index_val.sort()
 
-    if super_fast == True:
-        aux = index_train
-        index_train = index_val
-        index_val = aux
+    data_train = arrangeDataset(dataset_ubench, index_train, performance_counters)
+    data_val = arrangeDataset(dataset_ubench, index_val, performance_counters)
 
-    if model_name == 'multiNN':
-        print("Model type no longer supported!!")
-        sys.exit()
+    if encoder_config_file != '':
+        config = rf.readISA('model_configs/encoder/%s.txt' %(encoder_config_file))
+        encoder_params = {'embed_size': int(config[0]), 'learning_rate': float(config[1]), 'dropout_prob': float(config[2]), 'optimizer_name': config[3], 'num_layers': int(config[4]), 'hidden_size': int(config[5]), 'batch_size': int(config[6])}
     else:
-        data_train = arrangeDataset(dataset_ubench, index_train, performance_counters)
-        data_val = arrangeDataset(dataset_ubench, index_val, performance_counters)
+        encoder_params = {'embed_size': embed_size, 'learning_rate': learning_rate_encoder, 'dropout_prob': dropout_prob_encoder, 'optimizer_name': optimizer_encoder, 'num_layers': num_layers_encoder, 'hidden_size': hidden_size_encoder, 'batch_size': batch_size}
+    encoder_params['vocab_size'] = vocab_size
 
-        if encoder_config_file != '':
-            config = rf.readISA('model_configs/encoder/%s.txt' %(encoder_config_file))
-            encoder_params = {'embed_size': int(config[0]), 'learning_rate': float(config[1]), 'dropout_prob': float(config[2]), 'optimizer_name': config[3], 'num_layers': int(config[4]), 'hidden_size': int(config[5]), 'batch_size': int(config[6])}
-        else:
-            encoder_params = {'embed_size': embed_size, 'learning_rate': learning_rate_encoder, 'dropout_prob': dropout_prob_encoder, 'optimizer_name': optimizer_encoder, 'num_layers': num_layers_encoder, 'hidden_size': hidden_size_encoder, 'batch_size': batch_size}
-        encoder_params['vocab_size'] = vocab_size
+    nn_params = {}
+    config_files = [timedvfs_config_file,  powdvfs_config_file, energydvfs_config_file]
+    for model_name, model_config_file in zip(possible_outputs, config_files):
+        if outputs_to_model[model_name] == False:
+            if model_config_file != '':
+                config = rf.readISA('model_configs/%s/%s.txt' %(model_name, model_config_file))
+                nn_params[model_name] = {'learning_rate': float(config[0]), 'dropout_prob': float(config[1]), 'optimizer_name': config[2], 'num_layers': int(config[3])}
 
-        nn_params = {}
-        config_files = [timedvfs_config_file, powdefault_config_file, powdvfs_config_file, energydvfs_config_file]
-        for model_name, model_config_file in zip(possible_outputs, config_files):
-            if outputs_to_model[model_name] == False:
-                if model_config_file != '':
-                    config = rf.readISA('model_configs/%s/%s.txt' %(model_name, model_config_file))
-                    nn_params[model_name] = {'learning_rate': float(config[0]), 'dropout_prob': float(config[1]), 'optimizer_name': config[2], 'num_layers': int(config[3])}
+                hidden_sizes_list = []
+                for hidden_size_aux in config[4:]:
+                    hidden_sizes_list.append(int(hidden_size_aux))
 
-                    hidden_sizes_list = []
-                    for hidden_size_aux in config[4:]:
-                        hidden_sizes_list.append(int(hidden_size_aux))
+                nn_params[model_name]['hidden_sizes'] = np.asarray(hidden_sizes_list)
+                if len(nn_params[model_name]['hidden_sizes']) != nn_params[model_name]['num_layers']:
+                    print('ERROR: Hidden sizes dont match with number of hidden layers in file: \'model_configs/encoder/%s' %(encoder_config_file))
+                    sys.exit()
+            else:
+                nn_params[model_name] = {'learning_rate': learning_rate, 'dropout_prob': dropout_prob, 'optimizer_name': optimizer, 'num_layers': 2, 'hidden_sizes': [hidden_size, hidden_size_2]}
 
-                    nn_params[model_name]['hidden_sizes'] = np.asarray(hidden_sizes_list)
-                    if len(nn_params[model_name]['hidden_sizes']) != nn_params[model_name]['num_layers']:
-                        print('ERROR: Hidden sizes dont match with number of hidden layers in file: \'model_configs/encoder/%s' %(encoder_config_file))
-                        sys.exit()
-                else:
-                    nn_params[model_name] = {'learning_rate': learning_rate, 'dropout_prob': dropout_prob, 'optimizer_name': optimizer, 'num_layers': 2, 'hidden_sizes': [hidden_size, hidden_size_2]}
+    model_params = {'model_name': model_name, 'max_epochs': num_epochs, 'encoder_params': encoder_params, 'nn_params': nn_params, 'outputs': outputs_to_model, 'never_stop': never_stop, 'no_output': no_output}
 
-        model_params = {'model_name': model_name, 'max_epochs': num_epochs, 'encoder_params': encoder_params, 'nn_params': nn_params, 'outputs': outputs_to_model, 'never_stop': never_stop, 'no_output': no_output}
+    if use_test == True:
+        data_test = arrangeDataset(dataset_test, np.arange(len(dataset_test['names'])), performance_counters)
+        trainingTime, trainedModels, results_train, results_val, results_test = pytor.trainPytorchModel(device, clocks, verbose, fast, performance_counters, model_params, test_output_dir, data_train, data_val, data_test)
+    else:
+        trainingTime, trainedModels, results_train, results_val, _  = pytor.trainPytorchModel(device, clocks, verbose, fast, performance_counters, model_params, test_output_dir, data_train, data_val)
+    if verbose == True:
+        print(test_output_dir)
 
-        if use_test == True:
-            data_test = arrangeDataset(dataset_test, np.arange(len(dataset_test['names'])), performance_counters)
-            trainingTime, trainedModels, results_train, results_val, results_test = pytor.trainPytorchModel(device, clocks, verbose, fast, performance_counters, model_params, test_output_dir, data_train, data_val, data_test)
-        else:
-            trainingTime, trainedModels, results_train, results_val, _  = pytor.trainPytorchModel(device, clocks, verbose, fast, performance_counters, model_params, test_output_dir, data_train, data_val)
-        if verbose == True:
-            print(test_output_dir)
-
-        if fast == 0:
-            predicted_values = {}
-            measured_values = {}
-            errors_values = {}
-            for model_type in trainedModels['output_types']:
-                predicted_values[model_type] = {'Training': results_train['last_epoch_predictions'][model_type], 'Validation': results_val['last_epoch_predictions'][model_type]}
-                measured_values[model_type] = {'Training': data_train[model_type], 'Validation': data_val[model_type]}
-                errors_values[model_type] = {'Training': results_train['abs_error_per_epoch'][-1][model_type], 'Validation': results_val['abs_error_per_epoch'][-1][model_type]}
-
-                np.savetxt('%s/last_epoch_prediction_train_%s_%s_%s.csv' %(test_output_dir, model_type, model_name, benchs_file[:-4]), predicted_values[model_type]['Training'], delimiter=",")
-                np.savetxt('%s/last_epoch_prediction_val_%s_%s_%s.csv' %(test_output_dir, model_type, model_name, benchs_file[:-4]), predicted_values[model_type]['Validation'], delimiter=",")
-
-            if use_test == True:
-                for model_type in trainedModels['output_types']:
-                    predicted_values[model_type]['Testing'] =  results_test['last_epoch_predictions'][model_type]
-                    measured_values[model_type]['Testing'] = data_test[model_type]
-                    errors_values[model_type]['Testing'] = results_test['abs_error_per_epoch'][-1][model_type]
-                    np.savetxt('%s/last_epoch_prediction_test_%s_%s_%s.csv' %(test_output_dir, model_type, model_name, benchs_file[:-4]), predicted_values[model_type]['Testing'], delimiter=",")
-
-        torch.save(trainedModels['encoder'].state_dict(), '%s/%s_optenc%s_lrenc%s_layrenc%s_hiddenenc%s_dropoutenc%s_opt%s_epochs%s_lr%s_layr%s_embed%s_hidden%s_dropout%s_batch%s_%s' %(test_output_dir, 'encoder', optimizer_encoder, learning_rate_encoder, num_layers_encoder, hidden_size_encoder, dropout_prob_encoder, optimizer, num_epochs, learning_rate, num_layers, embed_size, hidden_size, dropout_prob, batch_size, benchs_file))
-        for model in trainedModels['output_types']:
-            torch.save(trainedModels[model].state_dict(), '%s/%s_optenc%s_lrenc%s_layrenc%s_hiddenenc%s_dropoutenc%s_opt%s_epochs%s_lr%s_layr%s_embed%s_hidden%s_dropout%s_batch%s_%s' %(test_output_dir, model, optimizer_encoder, learning_rate_encoder, num_layers_encoder, hidden_size_encoder, dropout_prob_encoder, optimizer, num_epochs, learning_rate, num_layers, embed_size, hidden_size, dropout_prob, batch_size, benchs_file))
-#
-        #print last epoch results
-        LEF = open('%s/last_epoch.txt' %(test_output_dir), 'w')
-        LEF.write("num_epochs,%d\n" %len(results_train['abs_error_per_epoch']))
-        if use_test == True:
-            datasets_names = ['Training', 'Validation', 'Testing']
-        else:
-            datasets_names = ['Training', 'Validation']
-
+    if fast == 0:
+        predicted_values = {}
+        measured_values = {}
+        errors_values = {}
         for model_type in trainedModels['output_types']:
-            for dataset in datasets_names:
-                LEF.write('%s,%s,%.4f\n' %(dataset, model_type, errors_values[model_type][dataset]))
-        LEF.close()
+            predicted_values[model_type] = {'Training': results_train['last_epoch_predictions'][model_type], 'Validation': results_val['last_epoch_predictions'][model_type]}
+            measured_values[model_type] = {'Training': data_train[model_type], 'Validation': data_val[model_type]}
+            errors_values[model_type] = {'Training': results_train['abs_error_per_epoch'][-1][model_type], 'Validation': results_val['abs_error_per_epoch'][-1][model_type]}
+
+            np.savetxt('%s/last_epoch_prediction_train_%s_%s_%s.csv' %(test_output_dir, model_type, model_name, benchs_file[:-4]), predicted_values[model_type]['Training'], delimiter=",")
+            np.savetxt('%s/last_epoch_prediction_val_%s_%s_%s.csv' %(test_output_dir, model_type, model_name, benchs_file[:-4]), predicted_values[model_type]['Validation'], delimiter=",")
+
+        if use_test == True:
+            for model_type in trainedModels['output_types']:
+                predicted_values[model_type]['Testing'] =  results_test['last_epoch_predictions'][model_type]
+                measured_values[model_type]['Testing'] = data_test[model_type]
+                errors_values[model_type]['Testing'] = results_test['abs_error_per_epoch'][-1][model_type]
+                np.savetxt('%s/last_epoch_prediction_test_%s_%s_%s.csv' %(test_output_dir, model_type, model_name, benchs_file[:-4]), predicted_values[model_type]['Testing'], delimiter=",")
+
+    torch.save(trainedModels['encoder'].state_dict(), '%s/%s_%s' %(test_output_dir, 'encoder', benchs_file))
+    for model in trainedModels['output_types']:
+        torch.save(trainedModels[model].state_dict(), '%s/%s_%s' %(test_output_dir, model, benchs_file))
+#
+    #print last epoch results
+    LEF = open('%s/last_epoch.txt' %(test_output_dir), 'w')
+    LEF.write("num_epochs,%d\n" %len(results_train['abs_error_per_epoch']))
+    if use_test == True:
+        datasets_names = ['Training', 'Validation', 'Testing']
+    else:
+        datasets_names = ['Training', 'Validation']
+
+    for model_type in trainedModels['output_types']:
+        for dataset in datasets_names:
+            LEF.write('%s,%s,%.4f\n' %(dataset, model_type, errors_values[model_type][dataset]))
+    LEF.close()
 
     closeOutputLogFile()
 if __name__ == "__main__":

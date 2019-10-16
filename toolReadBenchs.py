@@ -333,7 +333,7 @@ def main():
     parser.add_argument('--benchs_test_file', type=str, default = 'all')
     parser.add_argument('--tdp', type=int, default=250)
     parser.add_argument('--v', action='store_const', const=True, default=False)
-    parser.add_argument('--e', action='store_const', const=True, default=False)
+    parser.add_argument('--e', action='store_const', const=False, default=True)
     parser.add_argument('--bad', action='store_const', const=True, default=False)
     parser.add_argument('--good', action='store_const', const=True, default=False)
     parser.add_argument('--o', action='store_const', const=True, default=False)

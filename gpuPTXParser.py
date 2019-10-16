@@ -5,7 +5,6 @@ import re #regular expressions library
 from src.readFiles import readISA
 from src.globalStuff import buffer_max_size
 
-
 def printBuffers(buffer, buffer_producers):
     str_aux = '\tBuffer produced values: ['
     for id, value in enumerate(buffer):

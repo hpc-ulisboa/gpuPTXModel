@@ -1,0 +1,17 @@
+BlackScholes
+backprop
+syrk_unrolled_2
+gesummv_unrolled_3
+gemm_unrolled_2
+fdtd2d
+covariance_unrolled
+correlation_unrolled
+atax_unrolled_2
+3mm_unrolled
+3DConvolution
+2mm_unrolled
+2DConvolution
+hotspot_unrolled
+hotspot3D_unrolled
+mri-gridding
+lbm

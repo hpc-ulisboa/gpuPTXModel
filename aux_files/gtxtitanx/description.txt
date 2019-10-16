@@ -1,0 +1,3 @@
+fmems: 3505 and 810
+fcores: 16 levels per fmem
+training set: microbenchmarks + 5 real (different real)

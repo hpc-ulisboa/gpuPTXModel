@@ -30,19 +30,19 @@ Example:
   gpuPTXModel.py Microbenchmarks/Outputs/ --device gpu --model_name LSTM --num_layers 2 --learning_rate 0.001 --num_epochs 50
 ```
 
-## ptxParser
+## gpuPTXParser
 
-``ptxParser`` is a command line tool that can be used for reading [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html) files and extracting the number of occurrences of each different instructions per GPU kernel. The tool can also extract the sequence of instructions of the kernels in the source file.
+``gpuPTXParser`` is a command line tool that can be used for reading [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html) files and extracting the number of occurrences of each different instructions per GPU kernel. The tool can also extract the sequence of instructions of the kernels in the source file.
 
 
 * Usage:
 ```
-ptxParser.py <isa_file.txt> <application_to_profile.ptx>
+gpuPTXParser.py <isa_file.txt> <application_to_profile.ptx>
 ```
 
 * Example:
 ```
-ptxParser.py ptx_isa.txt Microbenchmarks/pure_DRAM/DRAM.ptx
+gpuPTXParser.py ptx_isa.txt Microbenchmarks/pure_DRAM/DRAM.ptx
 ```
 ## Contact
 If you have any questions regarding gpuPTXModel please email joao.guerreiro@inesc-id.pt

@@ -1,0 +1,8 @@
+reg
+sreg
+const
+global
+local
+param
+shared
+tex

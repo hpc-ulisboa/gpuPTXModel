@@ -24,10 +24,10 @@ gpuPTXModel.py <PATH_TO_MICROBENCHMARK_DATASET> <GPU_NAME> [--test_data_path <PA
   --no_energy_dvfs: to turn off Energy FNN, i.e., not use it
   --num_epochs <NUM_EPOCHS>: to select the maximum number of epochs to use during training (default: 20)
   --v: turn on verbose mode (default: False)
+```
 
-
-Example:
-
+* Example:
+```
   gpuPTXModel.py Microbenchmarks/Outputs/ --device gpu --model_name LSTM --num_layers 2 --learning_rate 0.001 --num_epochs 50
 ```
 

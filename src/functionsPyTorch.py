@@ -6,7 +6,6 @@ from torch.autograd import Variable
 
 import src.modelsPytorch as mopy
 from src.globalStuff import printing, threshold_consecutive_epochs, max_consecutive_epochs_no_improvement, reorderData, IND_PAD, timeSince, asMinutes, list_event_names, metrics_to_use, possible_outputs, SAVE_EVERY_TH_EPOCH, SAVE_STATE
-from src import outputPlots as outp
 
 def saveIntermediateState(test_output_dir, epoch, trainedModels, model_params, pred_train, pred_val, pred_test, data_train, data_val, data_test):
     import os

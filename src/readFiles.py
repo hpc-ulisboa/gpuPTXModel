@@ -163,7 +163,6 @@ def readAggDataFile(file_path, clocks, tdp, gpu):
     list_time_default = []
     list_pow_default = []
     list_energy_default = []
-    list_optimal_freqs = []
 
     with open(file_name) as csvfile:
         spamreader = csv.reader(csvfile)
@@ -176,7 +175,6 @@ def readAggDataFile(file_path, clocks, tdp, gpu):
                 clock_core_id = 0
                 clock_mem_id = 0
                 list_bench_names.append(row[0])
-                list_optimal_freqs.append((int(row[1]), int(row[2])))
                 values_time = np.zeros((num_mem_clocks, max_num_core_clocks), dtype=np.float32)
                 values_pow = np.zeros((num_mem_clocks, max_num_core_clocks), dtype=np.float32)
                 values_energy = np.zeros((num_mem_clocks, max_num_core_clocks), dtype=np.float32)
@@ -213,7 +211,7 @@ def readAggDataFile(file_path, clocks, tdp, gpu):
                 else:
                     clock_core_id += 1
 
-    list_values_read = {'names': list_bench_names, 'time_dvfs': list_time_dvfs, 'pow_dvfs': list_pow_dvfs, 'energy_dvfs': list_energy_dvfs, 'time_default': list_time_default, 'pow_default': list_pow_default, 'energy_default': list_energy_default, 'optimal_f': list_optimal_freqs}
+    list_values_read = {'names': list_bench_names, 'time_dvfs': list_time_dvfs, 'pow_dvfs': list_pow_dvfs, 'energy_dvfs': list_energy_dvfs, 'time_default': list_time_default, 'pow_default': list_pow_default, 'energy_default': list_energy_default}
 
     return list_values_read
 

@@ -209,7 +209,7 @@ def trainBatch(device, clocks, model_name, input_tensor, target_tensor, models, 
                 if pc == True:
                     newfeatures = torch.cat((newfeatures, metrics_tensor), 0).to(device)
                 output = output_model(newfeatures)
-                loss += criterion(output, target_variable[bi][clock_mem_id,clock_core_id])
+                loss += criterion(output[0], target_variable[bi][clock_mem_id,clock_core_id])
 
     loss.backward()
     optimizer_encoder.step()

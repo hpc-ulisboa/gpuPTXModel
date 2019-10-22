@@ -147,7 +147,7 @@ def readInstructionsSeq(data_path, bench):
     return sequence_kernel
 
 def readAggDataFile(file_path, clocks, tdp, gpu):
-    file_name = "%s/output_allbenchs_newIdle_%s.csv" %(file_path, gpu)
+    file_name = "%s/aggregated_dataset_%s.csv" %(file_path, gpu)
 
     num_mem_clocks = clocks['num_mem_clocks']
     num_core_clocks = clocks['num_core_clocks']

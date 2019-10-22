@@ -12,8 +12,7 @@ SAVE_STATE = True #decides if saves intermediate networks
 SAVE_EVERY_TH_EPOCH = 50
 
 
-output_dir_train = 'outputs_newTest_real_models'
-output_dir_infer = 'outputs_newTest_inference'
+output_dir_train = 'output_training_networks'
 OutputFile= "output_log.txt"
 
 aux_files_path = 'aux_files'
@@ -26,7 +25,7 @@ max_operands = 5
 buffer_max_size = 9
 dependencies_types = 3
 
-dataset_dict_headers = ['names', 'inst_seq', 'time_dvfs', 'pow_dvfs', 'energy_dvfs', 'time_default', 'pow_default', 'energy_default', 'optimal_f']
+dataset_dict_headers = ['names', 'inst_seq', 'time_dvfs', 'pow_dvfs', 'energy_dvfs', 'time_default', 'pow_default', 'energy_default']
 
 percentage_training = .9
 threshold_consecutive_epochs = 0.5

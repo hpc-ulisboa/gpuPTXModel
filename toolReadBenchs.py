@@ -174,8 +174,9 @@ def writeOutputFile(benchs_data_path, lists, benchs, clocks, gpu_name):
     list_pow = lists['pow']
     list_energy = lists['energy']
 
-    out = open("%s/output_allbenchs_newIdle_%s.csv" %(benchs_data_path, gpu_name), "w") # output file
+    out = open("%s/aggregated_dataset_%s.csv" %(benchs_data_path, gpu_name), "w") # output file
     for bench_id, bench in enumerate(benchs):
+        out.write("%s\n" %(bench))
         for clock_mem_id, clock_mem in enumerate(mem_clocks):
             for clock_core_id, clock_core in enumerate(core_clocks[clock_mem_id]):
                 out.write("%d,%d,%f,%f,%f\n" %(clock_mem, clock_core, list_time[bench_id][clock_mem_id, clock_core_id], list_pow[bench_id][clock_mem_id, clock_core_id], list_energy[bench_id][clock_mem_id, clock_core_id]))

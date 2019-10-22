@@ -1,6 +1,5 @@
 # Synthetic benchmarks used to train the models
 
-Taken from:
 * [joaofilipedg-gpupowermodel](https://github.com/hpc-ulisboa/gpuPTXModel/tree/master/datasets/microbenchmarks/joaofilipedg-gpupowermodel) - Taken from [joaofilipedg-gpupowermodel](https://github.com/hpc-ulisboa/gpupowermodel/tree/master/v2.0_TPDS2019/microbenchmarks)
 * [akhilarunkumar-GPURelease](https://github.com/hpc-ulisboa/gpuPTXModel/tree/master/datasets/microbenchmarks/akhilarunkumar-GPURelease) - Taken from [akhilarunkumar-GPURelease](https://github.com/akhilarunkumar/GPUJoule_release)
 

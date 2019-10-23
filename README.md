@@ -1,5 +1,7 @@
 # gpuPTXModel - GPU Power Model through Assembly Analysis using Deep Structured Learning
 
+<p align="center"><img width="100%" src="png/model_diagram.png" /></p>
+
 ## Directory structure
 
 * ``assembly_info`` - files with Assembly ISA (list of possible instructions) and available modifiers;

@@ -19,7 +19,7 @@
 The tool receives as argument the path to the microbenchmark (and optionally the testing dataset), which need to have been properly aggregated using the ``toolReadBenchs`` tool.
 
 * Usage:
-```
+```bash
 gpuPTXModel.py <PATH_TO_MICROBENCHMARK_DATASET> <GPU_NAME> [--test_data_path <PATH_TO_TESTING_DATASET>] [--device <cpu|gpu>] [--device_id <ID>] [--encoder_file <FILE>]  [--time_dvfs_file <FILE>] [--pow_dvfs_file <FILE>] [--energy_dvfs_file <FILE>] [--no_time_dvfs] [--no_pow_dvfs] [--no_energy_dvfs] [--num_epochs <NUM_EPOCHS>] [--v]
 ```
 
@@ -57,7 +57,7 @@ gpuPTXModel.py <PATH_TO_MICROBENCHMARK_DATASET> <GPU_NAME> [--test_data_path <PA
 
 
 * Example:
-```
+```bash
   gpuPTXModel.py Microbenchmarks/Outputs/ --device gpu --model_name LSTM --num_layers 2 --learning_rate 0.001 --num_epochs 50
 ```
 
@@ -67,7 +67,7 @@ gpuPTXModel.py <PATH_TO_MICROBENCHMARK_DATASET> <GPU_NAME> [--test_data_path <PA
 The tool also creates pdf files with the plots of the measured values across the different frequency levels.
 
 * Usage:
-```
+```bash
 toolReadBenchs.py <PATH_TO_MICROBENCHMARK_DATASET> <GPU_NAME> [--benchs_file <MICROBENCHMARK_NAMES>] [--test_data_path <PATH_TO_TESTING_DATASET>] [--benchs_test_file <TESTING_NAMES>] [--tdp <TDP_VALUE>] [--o] [--v]
 ```
 
@@ -92,7 +92,7 @@ toolReadBenchs.py <PATH_TO_MICROBENCHMARK_DATASET> <GPU_NAME> [--benchs_file <MI
     ``--v`` : turn on verbose mode (default: False).
 
 * Example:
-```
+```bash
 toolReadBenchs.py Outputs/Microbenchmarks/GTXTitanX/ gtxtitanx --benchs_file benchs_all.txt --test_data_path Outputs/RealBenchmarks/GTXTitanX/ --benchs_test_file benchs_real_best.txt --o
 ```
 

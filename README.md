@@ -1,6 +1,6 @@
 # gpuPTXModel - GPU Power Model through Assembly Analysis using Deep Structured Learning
 
-<p align="center"><img width="100%" src="png/model_diagram.png" /></p>
+<p align="center"><img width="100%" src="png/model.png" /></p>
 
 ## Directory structure
 

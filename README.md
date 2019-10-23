@@ -1,4 +1,4 @@
-# gpuPTXModel - GPU Power Model through Assembly Analysis using Deep Structured Learning
+# gpuPTXModel - GPU Static Modeling using PTX and Deep Structured Learning
 
 <p align="center"><img width="100%" src="png/model.png" /></p>
 
@@ -15,8 +15,11 @@
 
 ## 1. gpuPTXModel Tool
 
-``gpuPTXModel`` is a command line tool that allows creating a GPU power consumption model, which can be used to predict the power consumption of applications based solely on the sequence of [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html) instructions in the kernel code.
-The tool receives as argument the path to the microbenchmark (and optionally the testing dataset), which need to have been properly aggregated using the ``toolReadBenchs`` tool.
+``gpuPTXModel`` is a command line tool that allows creating DVFS-aware GPU static models based solely on the sequence of [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html) instructions in the kernel code.
+The proposed models, implemented using recurrent neural networks (LSTM-based), take into account the sequence of GPU assembly instructions and can be used to accurately predict changes in the execution time, power and energy consumption of applications when the frequencies of different GPU domains (core and memory) are scaled.
+
+To train the models, the tool receives as argument the path to the microbenchmark (and optionally the testing dataset), which need to have been properly aggregated using the [``toolReadBenchs``](https://github.com/hpc-ulisboa/gpuPTXModel#2-toolreadbenchs-tool) tool.
+
 
 * Usage:
 ```bash
@@ -54,8 +57,6 @@ gpuPTXModel.py <PATH_TO_MICROBENCHMARK_DATASET> <GPU_NAME> [--test_data_path <PA
 
     ``--v`` : turn on verbose mode (default: False).
 
-
-
 * Example:
 ```bash
   gpuPTXModel.py Microbenchmarks/Outputs/ --device gpu --model_name LSTM --num_layers 2 --learning_rate 0.001 --num_epochs 50
@@ -63,42 +64,17 @@ gpuPTXModel.py <PATH_TO_MICROBENCHMARK_DATASET> <GPU_NAME> [--test_data_path <PA
 
 ## 2. toolReadBenchs Tool
 
-``toolReadBenchs`` is a command line tool that can be used for reading the measured values (execution times and power consumption) and organizing them in the format that can be used by the main ``gpuPTXModel`` tool.
-The tool also creates pdf files with the plots of the measured values across the different frequency levels.
+``toolReadBenchs`` is a command line [tool](https://github.com/hpc-ulisboa/gpuPTXModel/tree/master/read_benchs) that can be used for reading the datasets of a GPU and aggregating them in a format that can be used by ``gpuPTXModel``.
 
-* Usage:
-```bash
-toolReadBenchs.py <PATH_TO_MICROBENCHMARK_DATASET> <GPU_NAME> [--benchs_file <MICROBENCHMARK_NAMES>] [--test_data_path <PATH_TO_TESTING_DATASET>] [--benchs_test_file <TESTING_NAMES>] [--tdp <TDP_VALUE>] [--o] [--v]
-```
-
-* Arguments:
-
-    ``<PATH_TO_MICROBENCHMARK_DATASET>`` : PATH to the directory with the microbenchmark dataset (to be later used for training/validation the models).
-
-    ``<GPU_NAME>`` : name of the GPU device the dataset was executed on.
-
-* Options:
-
-    ``--benchs_file <MICROBENCHMARK_NAMES>`` : provide file with names of the microbenchmarks (default: all).
-
-    ``--test_data_path <PATH_TO_TESTING_DATASET>`` : PATH to the directory with the testing dataset (to be later used for testing the models) (default: '').
-
-    ``--benchs_test_file <TESTING_NAMES>`` : provide file with names of the testing benchmarks (default: all).
-
-    ``--tdp <TDP_VALUE>`` : give TDP value of the GPU device (default: 250).
-
-    ``--o`` : create output file with the aggregated datasets (default: False).
-
-    ``--v`` : turn on verbose mode (default: False).
-
-* Example:
-```bash
-toolReadBenchs.py Outputs/Microbenchmarks/GTXTitanX/ gtxtitanx --benchs_file benchs_all.txt --test_data_path Outputs/RealBenchmarks/GTXTitanX/ --benchs_test_file benchs_real_best.txt --o
-```
 
 ## 3. gpuPTXParser Tool
 
 ``gpuPTXParser`` is a command line [tool](https://github.com/hpc-ulisboa/gpuPTXModel/tree/master/ptx_parser) that can be used for reading [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html) files and extracting the number of occurrences of each different instructions per GPU kernel. The tool can also extract the sequence of instructions of the kernels in the source file.
+
+## Dependencies
+
+* [Python 3](https://www.continuum.io/downloads)
+* [PyTorch 1.2.0+](http://pytorch.org/)
 
 ## Contact
 If you have problems, questions, ideas or suggestions, please contact us by e-mail at joao.guerreiro@inesc-id.pt.

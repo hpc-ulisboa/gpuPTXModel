@@ -1,7 +1,5 @@
 # gpuPTXParser
 
-## 1. gpuPTXParser Tool
-
 ``gpuPTXParser`` is a command line tool that can be used for reading [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html) files and extracting the number of occurrences of each different instructions per GPU kernel. The tool can also extract the sequence of instructions of the kernels in the source file.
 
 * Usage:
@@ -28,11 +26,11 @@ gpuPTXParser.py aux_files/ Microbenchmarks/pure_DRAM/DRAM.ptx --histogram
 
 * Output Files:
 
-    1 ``outputOccurrences_per_kernel.csv`` file : with the count of occurrences of each instruction in the PTX ISA in each kernel from the parsed .ptx file. 1 row for each kernel. 1 column for each instruction.
+    ``outputOccurrences_per_kernel.csv`` file : with the count of occurrences of each instruction in the PTX ISA in each kernel from the parsed .ptx file. 1 row for each kernel. 1 column for each instruction.
 
-    1 ``outputSequenceReadable_kernel_i.csv`` file for each kernel ``i`` in the parsed .ptx file.
+    ``outputSequenceReadable_kernel_i.csv`` file for each kernel ``i`` in the parsed .ptx file.
 
-    1 ``outputSequence_kernel_i.csv`` file for each kernel ``i`` in the parsed .ptx file. Values encoded.
+    ``outputSequence_kernel_i.csv`` file for each kernel ``i`` in the parsed .ptx file. Values encoded.
 
 ## Contact
 If you have problems, questions, ideas or suggestions, please contact us by e-mail at joao.guerreiro@inesc-id.pt.

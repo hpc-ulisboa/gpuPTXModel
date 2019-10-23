@@ -9,8 +9,12 @@
 * ``datasets`` - datasets used to train (and validate) the models;
 * ``gpu_info`` - files that characterize the architecture to be considered in the trained models (number of freq. domains, number of levels in each domain, etc.);
 * ``model_configs`` - configurations of the models;
-* ``ptx_parser`` - command line tool that can read PTX files and output the required information to be used in the proposed models;
 * ``src`` - gpuPTXModel source auxiliary files.
+
+### Tools
+- ``gpuPTXModel`` - main command line tool that trains static models (Performance+Power+Energy) based on a given dataset for a specific GPU;
+- ``gpuPTXParser`` - command line tool that can read PTX files and output the required information to be used in the proposed models;
+- ``toolReadBenchs`` - command line tool that reads dataset and aggregates in suitable format;
 
 
 ## 1. gpuPTXModel Tool
@@ -64,12 +68,72 @@ gpuPTXModel.py <PATH_TO_MICROBENCHMARK_DATASET> <GPU_NAME> [--test_data_path <PA
 
 ## 2. toolReadBenchs Tool
 
-``toolReadBenchs`` is a command line [tool](https://github.com/hpc-ulisboa/gpuPTXModel/tree/master/read_benchs) that can be used for reading the datasets of a GPU and aggregating them in a format that can be used by ``gpuPTXModel``.
+``toolReadBenchs`` is a command line tool that can be used for reading the measured values (execution times and power consumption) and organizing them in the format that can be used by the main ``gpuPTXModel`` tool.
+The tool also creates .pdf files with the plots of the measured values across the different frequency levels.
 
+* Usage:
+```bash
+toolReadBenchs.py <PATH_TO_MICROBENCHMARK_DATASET> <GPU_NAME> [--benchs_file <MICROBENCHMARK_NAMES>] [--test_data_path <PATH_TO_TESTING_DATASET>] [--benchs_test_file <TESTING_NAMES>] [--tdp <TDP_VALUE>] [--o] [--v]
+```
+
+* Arguments:
+
+    ``<PATH_TO_MICROBENCHMARK_DATASET>`` : PATH to the directory with the microbenchmark dataset (to be later used for training/validation the models).
+
+    ``<GPU_NAME>`` : name of the GPU device the dataset was executed on.
+
+* Options:
+
+    ``--benchs_file <MICROBENCHMARK_NAMES>`` : provide file with names of the microbenchmarks (default: all).
+
+    ``--test_data_path <PATH_TO_TESTING_DATASET>`` : PATH to the directory with the testing dataset (to be later used for testing the models) (default: '').
+
+    ``--benchs_test_file <TESTING_NAMES>`` : provide file with names of the testing benchmarks (default: all).
+
+    ``--tdp <TDP_VALUE>`` : give TDP value of the GPU device (default: 250).
+
+    ``--o`` : create output file with the aggregated datasets (default: False).
+
+    ``--v`` : turn on verbose mode (default: False).
+
+* Example:
+```bash
+toolReadBenchs.py Outputs/Microbenchmarks/GTXTitanX/ gtxtitanx --benchs_file benchs_all.txt --test_data_path Outputs/RealBenchmarks/GTXTitanX/ --benchs_test_file benchs_real_best.txt --o
+```
 
 ## 3. gpuPTXParser Tool
 
-``gpuPTXParser`` is a command line [tool](https://github.com/hpc-ulisboa/gpuPTXModel/tree/master/ptx_parser) that can be used for reading [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html) files and extracting the number of occurrences of each different instructions per GPU kernel. The tool can also extract the sequence of instructions of the kernels in the source file.
+``gpuPTXParser`` is a command line tool that can be used for reading [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html) files and extracting the number of occurrences of each different instructions per GPU kernel. The tool can also extract the sequence of instructions of the kernels in the source file.
+
+* Usage:
+```bash
+gpuPTXParser.py <PATH_TO_ISA_FILES> <APPLICATION.ptx> [--histogram] [--v]
+```
+
+* Arguments:
+
+    ``<PATH_TO_ISA_FILES>``:  PATH to the directory with the isa files (ptx_isa.txt, ptx_state_spaces.txt, ptx_instruction_types.txt).
+
+    ``<APPLICATION.ptx>`` :  .ptx file to be parsed.
+
+* Options:
+
+    ``--histogram`` : output a pdf file with the histogram of instructions used per kernel (default: False).
+
+    ``--v`` : turn on verbose mode (default: False).
+
+* Example:
+```bash
+gpuPTXParser.py aux_files/ Microbenchmarks/pure_DRAM/DRAM.ptx --histogram
+```
+
+* Output Files:
+
+    ``outputOccurrences_per_kernel.csv`` file : with the count of occurrences of each instruction in the PTX ISA in each kernel from the parsed .ptx file. 1 row for each kernel. 1 column for each instruction.
+
+    ``outputSequenceReadable_kernel_i.csv`` file for each kernel ``i`` in the parsed .ptx file.
+
+    ``outputSequence_kernel_i.csv`` file for each kernel ``i`` in the parsed .ptx file. Values encoded.
 
 ## Dependencies
 

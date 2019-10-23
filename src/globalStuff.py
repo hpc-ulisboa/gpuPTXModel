@@ -15,10 +15,13 @@ SAVE_EVERY_TH_EPOCH = 50
 output_dir_train = 'output_training_networks'
 OutputFile= "output_log.txt"
 
-aux_files_path = 'aux_files'
-isa_file = '%s/ptx_isa.txt' %aux_files_path
-inst_types_file = '%s/ptx_instruction_types.txt' %aux_files_path
-state_spaces_file = '%s/ptx_state_spaces.txt' %aux_files_path
+gpu_info_folder = 'gpu_info'
+assembly_info_folder = 'assembly_info'
+benchmarks_info_folder = 'benchmarks'
+
+isa_file = '%s/ptx_isa.txt' %assembly_info_folder
+inst_types_file = '%s/ptx_instruction_types.txt' %assembly_info_folder
+state_spaces_file = '%s/ptx_state_spaces.txt' %assembly_info_folder
 
 num_iters_pow = 2
 max_operands = 5

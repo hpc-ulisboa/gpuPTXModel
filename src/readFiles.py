@@ -4,7 +4,7 @@ import sys
 import numpy as np
 from os import listdir
 from src import globalStuff as gls
-from src.globalStuff import POW_THRESHOLD_GPU_ACTIVE, list_event_names, max_values_metrics
+from src.globalStuff import POW_THRESHOLD_GPU_ACTIVE, list_event_names, max_values_metrics, gpu_info_folder
 
 def avg_above_threshold(values, pIdle):
     good_values = values > pIdle
@@ -15,7 +15,7 @@ def avg_above_threshold(values, pIdle):
 
 def readIdlePowers(clocks, gpu_name):
     idle_powers = np.zeros((clocks['num_mem_clocks'],np.max(clocks['num_core_clocks'])), dtype=np.float32)
-    list_idle_powers = np.asarray(readISA("aux_files/%s/idle_pows_%s.txt" %(gpu_name, gpu_name)))
+    list_idle_powers = np.asarray(readISA("%s/%s/idle_pows_%s.txt" %(gpu_info_folder,gpu_name, gpu_name)))
     id_aux=0
     for clock_mem_id, clock_mem in enumerate(clocks['mem_clocks']):
         for clock_core_id, clock_core in enumerate(clocks['core_clocks'][clock_mem_id]):
@@ -230,7 +230,7 @@ def readPCAggDataFile(file_path, list_data, gpu):
     return list_data
 
 def getClocksGPU(gpu_name):
-    mem_clocks = readISA("aux_files/%s/clks_mem_%s.txt" %(gpu_name, gpu_name))
+    mem_clocks = readISA("%s/%s/clks_mem_%s.txt" %(gpu_info_folder,gpu_name, gpu_name))
     default_mem_clock = int(mem_clocks[-1])
     del mem_clocks[-1]
 
@@ -241,7 +241,7 @@ def getClocksGPU(gpu_name):
     core_clocks = [None]*len(mem_clocks)
     num_core_clocks = [None]*len(mem_clocks)
     for mem_clock_id, mem_clock in enumerate(mem_clocks):
-        core_clocks_aux = readISA("aux_files/%s/clks_core_%s_%d.txt" %(gpu_name, gpu_name, mem_clock))
+        core_clocks_aux = readISA("%s/%s/clks_core_%s_%d.txt" %(gpu_info_folder,gpu_name, gpu_name, mem_clock))
         default_core_clock = int(core_clocks_aux[-1])
         del core_clocks_aux[-1]
         core_clocks_aux = np.asarray(core_clocks_aux)
@@ -293,10 +293,10 @@ def readISA(filepath):
     f.close()
     return ISA
 
-def getBenchmarksAvailable(aux_files_path, benchs_file, data_path):
+def getBenchmarksAvailable(path, benchs_file, data_path):
     ubenchmarks_in_folder = listdir(data_path)
     if benchs_file != 'all':
-        ubenchmarks = readISA('%s/%s' %(aux_files_path, benchs_file))
+        ubenchmarks = readISA('%s/%s' %(path, benchs_file))
         for bench_id, bench in enumerate(ubenchmarks):
             if bench not in ubenchmarks_in_folder:
                 print('Data for microbenchmark %s is not in given path.' %(bench))

@@ -346,7 +346,7 @@ def main():
     good_values_mode = args['good']
     create_output_file = args['o']
 
-    ubenchmarks = getBenchmarksAvailable(gls.aux_files_path, benchs_file, benchs_data_path)
+    ubenchmarks = getBenchmarksAvailable(gls.benchmarks_info_folder, benchs_file, benchs_data_path)
     ubenchmarks.sort()
     num_ubenchmarks = len(ubenchmarks)
     print("\n=============================Reading Data=============================\n")
@@ -360,7 +360,7 @@ def main():
     lists_data_ubench = readListsData(ubenchmarks, clocks, benchs_data_path, gpu_name, idle_powers)
     if test_data_path != '':
         use_test = True
-        test_benchmarks = getBenchmarksAvailable(gls.aux_files_path, benchs_test_file, test_data_path)
+        test_benchmarks = getBenchmarksAvailable(gls.benchmarks_info_folder, benchs_test_file, test_data_path)
         test_benchmarks.sort()
         num_test_benchmarks = len(test_benchmarks)
         print('\nNumber of testing benchmarks: %d' %(num_test_benchmarks))

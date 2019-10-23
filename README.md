@@ -1,5 +1,16 @@
 # gpuPTXModel - GPU Power Model through Assembly Analysis using Deep Structured Learning
 
+## Directory structure
+
+* ``assembly_info`` - files with Assembly ISA (list of possible instructions) and available modifiers;
+* ``benchmarks`` - information on considered benchmarks, including source code of the microbenchmarks;
+* ``datasets`` - datasets used to train (and validate) the models;
+* ``gpu_info`` - files that characterize the architecture to be considered in the trained models (number of freq. domains, number of levels in each domain, etc.);
+* ``model_configs`` - configurations of the models;
+* ``ptx_parser`` - command line tool that can read PTX files and output the required information to be used in the proposed models;
+* ``src`` - gpuPTXModel source auxiliary files.
+
+
 ## 1. gpuPTXModel Tool
 
 ``gpuPTXModel`` is a command line tool that allows creating a GPU power consumption model, which can be used to predict the power consumption of applications based solely on the sequence of [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html) instructions in the kernel code.

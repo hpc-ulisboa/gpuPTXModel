@@ -1,0 +1,14 @@
+mov.u32
+shl.b32
+mov.u32
+add.s32
+setp.s32
+mov.u32
+sub.s32
+shl.b32
+mov.u32
+add.s32
+shl.b32
+add.s32
+ld.shared.f32
+st.shared.f32

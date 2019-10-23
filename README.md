@@ -13,8 +13,8 @@
 
 ### Tools
 - ``gpuPTXModel`` - main command line tool that trains static models (Performance+Power+Energy) based on a given dataset for a specific GPU;
-- ``gpuPTXParser`` - command line tool that can read PTX files and output the required information to be used in the proposed models;
 - ``toolReadBenchs`` - command line tool that reads dataset and aggregates in suitable format;
+- ``gpuPTXParser`` - command line tool that can read PTX files and output the required information to be used in the proposed models;
 
 
 ## 1. gpuPTXModel Tool

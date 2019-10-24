@@ -1,7 +1,0 @@
-line 1: embeddings size
-line 2: learning rate
-line 3: dropout probability
-line 4: Optimizer
-line 5: number layers
-line 6: hidden layers size
-line 7: batch size

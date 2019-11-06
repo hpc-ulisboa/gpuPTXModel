@@ -20,7 +20,7 @@
 ## 1. gpuPTXModel Tool
 
 ``gpuPTXModel`` is a command line tool that allows creating DVFS-aware GPU static models based solely on the sequence of [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html) instructions in the kernel code.
-The proposed models, published in [IEEE Access](https://ieeexplore.ieee.org/document/8716300), implemented using recurrent neural networks (LSTM-based), take into account the sequence of GPU assembly instructions and can be used to accurately predict changes in the execution time, power and energy consumption of applications when the frequencies of different GPU domains (core and memory) are scaled.
+The proposed models, published in [IEEE Access](https://ieeexplore.ieee.org/document/8890640), implemented using recurrent neural networks (LSTM-based), take into account the sequence of GPU assembly instructions and can be used to accurately predict changes in the execution time, power and energy consumption of applications when the frequencies of different GPU domains (core and memory) are scaled.
 
 To train the models, the tool receives as argument the path to the microbenchmark (and optionally the testing dataset), which need to have been properly aggregated using the [``toolReadBenchs``](https://github.com/hpc-ulisboa/gpuPTXModel#2-toolreadbenchs-tool) tool.
 
@@ -142,7 +142,7 @@ gpuPTXParser.py aux_files/ Microbenchmarks/pure_DRAM/DRAM.ptx --histogram
 
 ## 4. REFERENCES
 
-[1] João Guerreiro, Aleksandar Ilic, Nuno Roma, Pedro Tomás. [GPU Static Modeling Using PTX and Deep Structured Learning](https://ieeexplore.ieee.org/document/8716300). IEEE Access, Volume 7, November 2019.
+[1] João Guerreiro, Aleksandar Ilic, Nuno Roma, Pedro Tomás. [GPU Static Modeling Using PTX and Deep Structured Learning](https://ieeexplore.ieee.org/document/8890640). IEEE Access, Volume 7, November 2019.
 
 
 ## Dependencies

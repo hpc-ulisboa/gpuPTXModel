@@ -142,7 +142,7 @@ gpuPTXParser.py aux_files/ Microbenchmarks/pure_DRAM/DRAM.ptx --histogram
 
 ## 4. REFERENCES
 
-    [1] João Guerreiro, Aleksandar Ilic, Nuno Roma, Pedro Tomás. [GPU Static Modeling Using PTX and Deep Structured Learning](https://ieeexplore.ieee.org/document/8716300). IEEE Access, Volume 7, November 2019.
+[1] João Guerreiro, Aleksandar Ilic, Nuno Roma, Pedro Tomás. [GPU Static Modeling Using PTX and Deep Structured Learning](https://ieeexplore.ieee.org/document/8716300). IEEE Access, Volume 7, November 2019.
 
 
 ## Dependencies

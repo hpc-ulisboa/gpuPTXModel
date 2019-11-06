@@ -24,7 +24,7 @@ The proposed models, published in [IEEE Access](https://ieeexplore.ieee.org/docu
 
 To train the models, the tool receives as argument the path to the microbenchmark (and optionally the testing dataset), which need to have been properly aggregated using the [``toolReadBenchs``](https://github.com/hpc-ulisboa/gpuPTXModel#2-toolreadbenchs-tool) tool.
 
-If you use the ``gpuPTXModel`` tool in a publication, please cite [[1]](#references).
+If you use the ``gpuPTXModel`` tool in a publication, please cite [[1]](#4-references).
 
 * Usage:
 ```bash
@@ -72,7 +72,7 @@ gpuPTXModel.py <PATH_TO_MICROBENCHMARK_DATASET> <GPU_NAME> [--test_data_path <PA
 ``toolReadBenchs`` is a command line tool that can be used for reading the measured values (execution times and power consumption) and organizing them in the format that can be used by the main ``gpuPTXModel`` tool.
 The tool also creates .pdf files with the plots of the measured values across the different frequency levels.
 
-If you use the ``toolReadBenchs`` tool in a publication, please cite [[1]](#references).
+If you use the ``toolReadBenchs`` tool in a publication, please cite [[1]](#4-references).
 
 * Usage:
 ```bash
@@ -108,7 +108,7 @@ toolReadBenchs.py Outputs/Microbenchmarks/GTXTitanX/ gtxtitanx --benchs_file ben
 
 ``gpuPTXParser`` is a command line tool that can be used for reading [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html) files and extracting the number of occurrences of each different instructions per GPU kernel. The tool can also extract the sequence of instructions of the kernels in the source file.
 
-If you use the ``gpuPTXParser`` tool in a publication, please cite [[1]](#references).
+If you use the ``gpuPTXParser`` tool in a publication, please cite [[1]](#4-references).
 
 * Usage:
 ```bash

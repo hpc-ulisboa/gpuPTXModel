@@ -20,10 +20,11 @@
 ## 1. gpuPTXModel Tool
 
 ``gpuPTXModel`` is a command line tool that allows creating DVFS-aware GPU static models based solely on the sequence of [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html) instructions in the kernel code.
-The proposed models, implemented using recurrent neural networks (LSTM-based), take into account the sequence of GPU assembly instructions and can be used to accurately predict changes in the execution time, power and energy consumption of applications when the frequencies of different GPU domains (core and memory) are scaled.
+The proposed models, published in [IEEE Access](https://ieeexplore.ieee.org/document/8716300), implemented using recurrent neural networks (LSTM-based), take into account the sequence of GPU assembly instructions and can be used to accurately predict changes in the execution time, power and energy consumption of applications when the frequencies of different GPU domains (core and memory) are scaled.
 
 To train the models, the tool receives as argument the path to the microbenchmark (and optionally the testing dataset), which need to have been properly aggregated using the [``toolReadBenchs``](https://github.com/hpc-ulisboa/gpuPTXModel#2-toolreadbenchs-tool) tool.
 
+If you use the ``gpuPTXModel`` tool in a publication, please cite [[1]](#references).
 
 * Usage:
 ```bash
@@ -71,6 +72,8 @@ gpuPTXModel.py <PATH_TO_MICROBENCHMARK_DATASET> <GPU_NAME> [--test_data_path <PA
 ``toolReadBenchs`` is a command line tool that can be used for reading the measured values (execution times and power consumption) and organizing them in the format that can be used by the main ``gpuPTXModel`` tool.
 The tool also creates .pdf files with the plots of the measured values across the different frequency levels.
 
+If you use the ``toolReadBenchs`` tool in a publication, please cite [[1]](#references).
+
 * Usage:
 ```bash
 toolReadBenchs.py <PATH_TO_MICROBENCHMARK_DATASET> <GPU_NAME> [--benchs_file <MICROBENCHMARK_NAMES>] [--test_data_path <PATH_TO_TESTING_DATASET>] [--benchs_test_file <TESTING_NAMES>] [--tdp <TDP_VALUE>] [--o] [--v]
@@ -105,6 +108,8 @@ toolReadBenchs.py Outputs/Microbenchmarks/GTXTitanX/ gtxtitanx --benchs_file ben
 
 ``gpuPTXParser`` is a command line tool that can be used for reading [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html) files and extracting the number of occurrences of each different instructions per GPU kernel. The tool can also extract the sequence of instructions of the kernels in the source file.
 
+If you use the ``gpuPTXParser`` tool in a publication, please cite [[1]](#references).
+
 * Usage:
 ```bash
 gpuPTXParser.py <PATH_TO_ISA_FILES> <APPLICATION.ptx> [--histogram] [--v]
@@ -134,6 +139,11 @@ gpuPTXParser.py aux_files/ Microbenchmarks/pure_DRAM/DRAM.ptx --histogram
     ``outputSequenceReadable_kernel_i.csv`` file for each kernel ``i`` in the parsed .ptx file.
 
     ``outputSequence_kernel_i.csv`` file for each kernel ``i`` in the parsed .ptx file. Values encoded.
+
+## 4. REFERENCES
+
+    [1] João Guerreiro, Aleksandar Ilic, Nuno Roma, Pedro Tomás. [GPU Static Modeling Using PTX and Deep Structured Learning](https://ieeexplore.ieee.org/document/8716300). IEEE Access, Volume 7, November 2019.
+
 
 ## Dependencies
 

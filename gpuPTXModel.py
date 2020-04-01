@@ -123,6 +123,8 @@ def main():
         encoder_params = {'embed_size': embed_size, 'learning_rate': learning_rate_encoder, 'dropout_prob': dropout_prob_encoder, 'optimizer_name': optimizer_encoder, 'num_layers': num_layers_encoder, 'hidden_size': hidden_size_encoder, 'batch_size': batch_size}
     encoder_params['vocab_size'] = vocab_size
 
+
+    # PREPARE THE PARAMETERS BEFORE MODEL TRAINING
     nn_params = {}
     config_files = [timedvfs_config_file,  powdvfs_config_file, energydvfs_config_file]
     for model_name, model_config_file in zip(possible_outputs, config_files):
@@ -144,6 +146,8 @@ def main():
 
     model_params = {'model_name': model_name, 'max_epochs': num_epochs, 'encoder_params': encoder_params, 'nn_params': nn_params, 'outputs': outputs_to_model, 'never_stop': never_stop, 'no_output': no_output}
 
+
+    # TRAIN THE MODELS
     if use_test == True:
         data_test = arrangeDataset(dataset_test, np.arange(len(dataset_test['names'])), performance_counters)
         trainingTime, trainedModels, results_train, results_val, results_test = pytor.trainPytorchModel(device, clocks, verbose, fast, performance_counters, model_params, test_output_dir, data_train, data_val, data_test)
@@ -152,10 +156,13 @@ def main():
     if verbose == True:
         print(test_output_dir)
 
+
     if fast == 0:
         predicted_values = {}
         measured_values = {}
         errors_values = {}
+
+        #save the predictions to an output .csv file
         for model_type in trainedModels['output_types']:
             predicted_values[model_type] = {'Training': results_train['last_epoch_predictions'][model_type], 'Validation': results_val['last_epoch_predictions'][model_type]}
             measured_values[model_type] = {'Training': data_train[model_type], 'Validation': data_val[model_type]}
@@ -164,6 +171,7 @@ def main():
             np.savetxt('%s/last_epoch_prediction_train_%s_%s_%s.csv' %(test_output_dir, model_type, model_name, benchs_file[:-4]), predicted_values[model_type]['Training'], delimiter=",")
             np.savetxt('%s/last_epoch_prediction_val_%s_%s_%s.csv' %(test_output_dir, model_type, model_name, benchs_file[:-4]), predicted_values[model_type]['Validation'], delimiter=",")
 
+        #if using the testing benchmarks to validate model
         if use_test == True:
             for model_type in trainedModels['output_types']:
                 predicted_values[model_type]['Testing'] =  results_test['last_epoch_predictions'][model_type]
@@ -171,6 +179,7 @@ def main():
                 errors_values[model_type]['Testing'] = results_test['abs_error_per_epoch'][-1][model_type]
                 np.savetxt('%s/last_epoch_prediction_test_%s_%s_%s.csv' %(test_output_dir, model_type, model_name, benchs_file[:-4]), predicted_values[model_type]['Testing'], delimiter=",")
 
+    #save model to an output file
     torch.save(trainedModels['encoder'].state_dict(), '%s/%s_%s' %(test_output_dir, 'encoder', benchs_file))
     for model in trainedModels['output_types']:
         torch.save(trainedModels[model].state_dict(), '%s/%s_%s' %(test_output_dir, model, benchs_file))
